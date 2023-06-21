@@ -73,11 +73,11 @@ func (rh *replayHandler) handleBinlog(binlogPath string) error {
 	}
 }
 
-func HandleBinlogReplay(folder storage.Folder, backupName string, untilTS string, untilBinlogLastModifiedTS string) {
+func HandleBinlogReplay(folder storage.Folder, backupName string, untilTS string, untilBinlogLastModifiedTS string, sinceTS string) {
 	dstDir, err := internal.GetLogsDstSettings(conf.MysqlBinlogDstSetting)
 	tracelog.ErrorLogger.FatalOnError(err)
 
-	startTS, endTS, endBinlogTS, err := getTimestamps(folder, backupName, untilTS, untilBinlogLastModifiedTS)
+	startTS, endTS, endBinlogTS, err := getTimestamps(folder, backupName, untilTS, untilBinlogLastModifiedTS, sinceTS)
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	handler := newReplayHandler(endTS)
@@ -90,15 +90,24 @@ func HandleBinlogReplay(folder storage.Folder, backupName string, untilTS string
 	tracelog.ErrorLogger.FatalfOnError("Failed to apply binlogs: %v", err)
 }
 
-func getTimestamps(folder storage.Folder, backupName, untilTS, untilBinlogLastModifiedTS string) (time.Time, time.Time, time.Time, error) {
-	backup, err := internal.GetBackupByName(backupName, utility.BaseBackupPath, folder)
-	if err != nil {
-		return time.Time{}, time.Time{}, time.Time{}, errors.Wrap(err, "Unable to get backup")
-	}
+func getTimestamps(folder storage.Folder, backupName, untilTS, untilBinlogLastModifiedTS, sinceTS string) (time.Time, time.Time, time.Time, error) {
+	var startTS time.Time
+	if sinceTS != "" {
+		var err error
+		startTS, err = utility.ParseUntilTS(sinceTS)
+		if err != nil {
+			return time.Time{}, time.Time{}, time.Time{}, err
+		}
+	} else {
+		backup, err := internal.GetBackupByName(backupName, utility.BaseBackupPath, folder)
+		if err != nil {
+			return time.Time{}, time.Time{}, time.Time{}, errors.Wrap(err, "Unable to get backup")
+		}
 
-	startTS, err := getBinlogSinceTS(folder, backup)
-	if err != nil {
-		return time.Time{}, time.Time{}, time.Time{}, err
+		startTS, err = getBinlogSinceTS(folder, backup)
+		if err != nil {
+			return time.Time{}, time.Time{}, time.Time{}, err
+		}
 	}
 
 	endTS, err := utility.ParseUntilTS(untilTS)

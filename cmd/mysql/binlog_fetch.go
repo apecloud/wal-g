@@ -19,6 +19,7 @@ const fetchUntilBinlogLastModifiedFlagShortDescr = "time in RFC3339 that is used
 var fetchBackupName string
 var fetchUntilTS string
 var fetchUntilBinlogLastModifiedTS string
+var fetchSinceTS string
 
 // binlogPushCmd represents the cron command
 var binlogFetchCmd = &cobra.Command{
@@ -28,7 +29,7 @@ var binlogFetchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		storage, err := internal.ConfigureStorage()
 		tracelog.ErrorLogger.FatalOnError(err)
-		mysql.HandleBinlogFetch(storage.RootFolder(), fetchBackupName, fetchUntilTS, fetchUntilBinlogLastModifiedTS)
+		mysql.HandleBinlogFetch(storage.RootFolder(), fetchBackupName, fetchUntilTS, fetchUntilBinlogLastModifiedTS, fetchSinceTS)
 	},
 	PreRun: func(cmd *cobra.Command, args []string) {
 		conf.RequiredSettings[conf.MysqlBinlogDstSetting] = true
@@ -47,5 +48,7 @@ func init() {
 		"until-binlog-last-modified-time",
 		"",
 		fetchUntilBinlogLastModifiedFlagShortDescr)
+	binlogFetchCmd.PersistentFlags().StringVar(&fetchSinceTS, "since-time",
+		"", "binlog since time in RFC3339")
 	cmd.AddCommand(binlogFetchCmd)
 }
