@@ -42,11 +42,11 @@ func (ih *indexHandler) createIndexFile() error {
 	return nil
 }
 
-func HandleBinlogFetch(folder storage.Folder, backupName string, untilTS string, untilBinlogLastModifiedTS string) {
+func HandleBinlogFetch(folder storage.Folder, backupName string, untilTS string, untilBinlogLastModifiedTS string, sinceTS string) {
 	dstDir, err := internal.GetLogsDstSettings(conf.MysqlBinlogDstSetting)
 	tracelog.ErrorLogger.FatalOnError(err)
 
-	startTS, endTS, endBinlogTS, err := getTimestamps(folder, backupName, untilTS, untilBinlogLastModifiedTS)
+	startTS, endTS, endBinlogTS, err := getTimestamps(folder, backupName, untilTS, untilBinlogLastModifiedTS, sinceTS)
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	handler := newIndexHandler(dstDir)

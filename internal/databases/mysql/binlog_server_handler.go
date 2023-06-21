@@ -263,7 +263,7 @@ func (h Handler) HandleQuery(query string) (*mysql.Result, error) {
 func HandleBinlogServer(since string, until string) {
 	st, err := internal.ConfigureStorage()
 	tracelog.ErrorLogger.FatalOnError(err)
-	startTS, untilTS, _, err = getTimestamps(st.RootFolder(), since, until, "")
+	startTS, untilTS, _, err = getTimestamps(st.RootFolder(), since, until, "", "")
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	// validate WALG_MYSQL_BINLOG_SERVER_REPLICA_SOURCE

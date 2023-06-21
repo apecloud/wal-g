@@ -19,6 +19,7 @@ const replayUntilBinlogLastModifiedFlagShortDescr = "time in RFC3339 that is use
 var replayBackupName string
 var replayUntilTS string
 var replayUntilBinlogLastModifiedTS string
+var replaySinceTS string
 
 var binlogReplayCmd = &cobra.Command{
 	Use:   "binlog-replay",
@@ -27,7 +28,7 @@ var binlogReplayCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		storage, err := internal.ConfigureStorage()
 		tracelog.ErrorLogger.FatalOnError(err)
-		mysql.HandleBinlogReplay(storage.RootFolder(), replayBackupName, replayUntilTS, replayUntilBinlogLastModifiedTS)
+		mysql.HandleBinlogReplay(storage.RootFolder(), replayBackupName, replayUntilTS, replayUntilBinlogLastModifiedTS, replaySinceTS)
 	},
 	PreRun: func(cmd *cobra.Command, args []string) {
 		conf.RequiredSettings[conf.MysqlBinlogReplayCmd] = true
@@ -42,5 +43,7 @@ func init() {
 		utility.TimeNowCrossPlatformUTC().Format(time.RFC3339), replayUntilFlagShortDescr)
 	binlogReplayCmd.PersistentFlags().StringVar(&replayUntilBinlogLastModifiedTS, "until-binlog-last-modified-time",
 		"", replayUntilBinlogLastModifiedFlagShortDescr)
+	binlogReplayCmd.PersistentFlags().StringVar(&replaySinceTS, "since-time",
+		"", "binlog since time in RFC3339")
 	cmd.AddCommand(binlogReplayCmd)
 }
