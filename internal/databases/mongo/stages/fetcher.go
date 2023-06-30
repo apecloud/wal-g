@@ -1,7 +1,6 @@
 package stages
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -11,6 +10,7 @@ import (
 	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
 	"github.com/wal-g/wal-g/internal/databases/mongo/client"
 	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stages/buffer"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -20,6 +20,8 @@ var (
 	_ = []Fetcher{&CursorMajFetcher{}}
 	_ = []BetweenFetcher{&StorageFetcher{}}
 )
+
+const OperationNoop = "\"n\""
 
 type GapHandler interface {
 	HandleGap(from, until models.Timestamp, err error) error
@@ -65,6 +67,10 @@ func NewCursorMajFetcher(m client.MongoDriver,
 	return &CursorMajFetcher{m, cur, lwUpdateInterval}
 }
 
+func (dbf *CursorMajFetcher) isNoopOp(raw bson.Raw) bool {
+	return raw.Lookup("op").String() == OperationNoop
+}
+
 // Fetch returns channel of oplog records, channel is filled in background.
 // TODO: use sessions
 // TODO: use context.WithTimeout
@@ -83,7 +89,9 @@ func (dbf *CursorMajFetcher) Fetch(ctx context.Context) (oplogc chan *models.Opl
 				errc <- fmt.Errorf("oplog record decoding failed: %w", err)
 				return
 			}
-
+			if dbf.isNoopOp(op.Data) {
+				continue
+			}
 			// TODO: move to separate component and fetch last writes in background
 			for models.LessTS(majTS, op.TS) {
 				time.Sleep(dbf.lwInterval)
@@ -123,21 +131,6 @@ func (dbf *CursorMajFetcher) Fetch(ctx context.Context) (oplogc chan *models.Opl
 	return oplogc, errc, nil
 }
 
-// CloserBuffer defines buffer which wraps bytes.Buffer and has dummy implementation of Closer interface.
-type CloserBuffer struct {
-	*bytes.Buffer
-}
-
-// NewCloserBuffer builds CloserBuffer instance
-func NewCloserBuffer() *CloserBuffer {
-	return &CloserBuffer{&bytes.Buffer{}}
-}
-
-// Close is dummy function that implements Closer interface.
-func (cb *CloserBuffer) Close() error {
-	return nil
-}
-
 // StorageFetcher implements BetweenFetcher interface for storage.
 type StorageFetcher struct {
 	downloader archive.Downloader
@@ -163,7 +156,7 @@ func (sf *StorageFetcher) FetchBetween(ctx context.Context,
 		defer close(errc)
 		defer close(data)
 
-		buf := NewCloserBuffer() // TODO: switch to streaming interface
+		buf := buffer.NewCloserBuffer() // TODO: switch to streaming interface
 		path := sf.path
 		firstFound := false
 
