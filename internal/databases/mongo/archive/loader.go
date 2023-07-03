@@ -169,7 +169,7 @@ func (sd *StorageDownloader) LastKnownArchiveTS() (models.Timestamp, error) {
 		ts, err := sd.getLatestOpTimeWithArch(*latestArch)
 		fmt.Printf("the latest opTime of the latest file %s is %v\n", latestArch.Filename(), ts)
 		if err != nil {
-			return maxTS, fmt.Errorf("error during read bson in file %s: %w", latestArch.Filename(), err)
+			return maxTS, fmt.Errorf("error during read bson in file %s: %w, you can delete this file and retry", latestArch.Filename(), err)
 		}
 		if ts.TS != 0 && models.LessTS(ts, maxTS) {
 			fmt.Printf("reset the last opTime to %v\n", ts)
