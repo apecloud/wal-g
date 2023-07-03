@@ -153,6 +153,7 @@ func (sd *StorageDownloader) LastKnownArchiveTS() (models.Timestamp, error) {
 		return models.Timestamp{}, fmt.Errorf("can not fetch keys since storage folder: %w ", err)
 	}
 	var latestArch *models.Archive
+	var latestSecondArch models.Archive
 	for _, key := range keys {
 		filename := key.GetName()
 		arch, err := models.ArchFromFilename(filename)
@@ -160,19 +161,37 @@ func (sd *StorageDownloader) LastKnownArchiveTS() (models.Timestamp, error) {
 			return models.Timestamp{}, fmt.Errorf("can not build archive since filename '%s': %w", filename, err)
 		}
 		if models.LessTS(maxTS, arch.End) {
+			if latestArch != nil {
+				latestSecondArch = *latestArch
+			}
 			maxTS = arch.End
 			latestArch = &arch
 		}
 	}
 	if latestArch != nil {
-		// checks if the latest file is completed, if exit process is abnormal, the file maybe is not completed
-		ts, err := sd.getLatestOpTimeWithArch(*latestArch)
-		fmt.Printf("the latest opTime of the latest file %s is %v\n", latestArch.Filename(), ts)
+		var ts models.Timestamp
+		// checks if the latest file is completed, if exit process is abnormal, the file maybe not completed. example as delete the pod in kubernetes
+		ts, err = sd.getLatestOpTimeWithArch(*latestArch)
 		if err != nil {
-			return maxTS, fmt.Errorf("error during read bson in file %s: %w, you can delete this file and retry", latestArch.Filename(), err)
+			if latestSecondArch.Filename() == "" {
+				return maxTS, fmt.Errorf("error during read bson in file %s: %w, you can delete this file and retry", latestArch.Filename(), err)
+			}
+			// checks if the latest second file is completed. if true, delete the latest uncompleted file and archive from the new endTS
+			lastTs, lerr := sd.getLatestOpTimeWIthArch(latestSecondArch)
+			if lerr != nil {
+				return maxTS, fmt.Errorf("error during read bson in file 【%s,%s: %w", latestSecondArch.Filename(), latestArch.Filename(), err)
+			}
+			// remove the uncompleted file
+			tracelog.InfoLogger.Printf("delete the uncompleted file %s\n", latestArch.Filename())
+			if derr := sd.oplogsFolder.DeleteObjects([]string{latestArch.Filename()}); derr != nil {
+				return maxTS, fmt.Errorf("error during delete the uncompleted file %s: %w, delete reason: %w", latestArch.Filename(), derr, err)
+			}
+			ts = lastTs
+			latestArch = &latestSecondArch
 		}
+		tracelog.InfoLogger.Printf("the latest opTime of the latest file %s is %v\n", latestArch.Filename(), ts)
 		if ts.TS != 0 && models.LessTS(ts, maxTS) {
-			fmt.Printf("reset the last opTime to %v\n", ts)
+			tracelog.InfoLogger.Printf("reset the last opTime to %v\n", ts)
 			maxTS = ts
 		}
 	}
@@ -202,6 +221,7 @@ func (sd *StorageDownloader) getLatestOpTimeWithArch(arch models.Archive) (ts mo
 		}
 		ts = op.TS
 	}
+	buf.Reset()
 	return
 }
 
