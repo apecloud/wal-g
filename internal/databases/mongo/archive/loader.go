@@ -165,11 +165,13 @@ func (sd *StorageDownloader) LastKnownArchiveTS() (models.Timestamp, error) {
 		}
 	}
 	if latestArch != nil {
-		// checks if the latest file is completed, if exit process is abnormal, the file may be not completed
+		// checks if the latest file is completed, if exit process is abnormal, the file maybe is not completed
 		ts, err := sd.getLatestOpTimeWithArch(*latestArch)
-		fmt.Printf("the latest opTime of the latest file is %v, %s \n", ts, maxTS)
-		// ignore error
-		if err == nil && models.LessTS(ts, maxTS) {
+		fmt.Printf("the latest opTime of the latest file %s is %v\n", latestArch.Filename(), ts)
+		if err != nil {
+			return maxTS, fmt.Errorf("error during read bson in file %s: %w", latestArch.Filename(), err)
+		}
+		if ts.TS != 0 && models.LessTS(ts, maxTS) {
 			fmt.Printf("reset the last opTime to %v\n", ts)
 			maxTS = ts
 		}
@@ -189,7 +191,7 @@ func (sd *StorageDownloader) getLatestOpTimeWithArch(arch models.Archive) (ts mo
 		raw, err = bson.NewFromIOReader(buf)
 		if err != nil {
 			if err == io.EOF {
-				break
+				err = nil
 			}
 			return
 		}
