@@ -173,13 +173,13 @@ func (sd *StorageDownloader) LastKnownArchiveTS() (models.Timestamp, error) {
 		// checks if the latest file is completed, if exit process is abnormal, the file maybe not completed. example as delete the pod in kubernetes
 		ts, err = sd.getLatestOpTimeWithArch(*latestArch)
 		if err != nil {
-			if latestSecondArch.Filename() == "" {
+			if latestSecondArch.Start.TS == 0 {
 				return maxTS, fmt.Errorf("error during read bson in file %s: %w, you can delete this file and retry", latestArch.Filename(), err)
 			}
 			// checks if the latest second file is completed. if true, delete the latest uncompleted file and archive from the new endTS
 			lastTs, lerr := sd.getLatestOpTimeWIthArch(latestSecondArch)
 			if lerr != nil {
-				return maxTS, fmt.Errorf("error during read bson in file 【%s,%s: %w", latestSecondArch.Filename(), latestArch.Filename(), err)
+				return maxTS, fmt.Errorf("error during read bson in file [%s,%s]: %w", latestSecondArch.Filename(), latestArch.Filename(), err)
 			}
 			// remove the uncompleted file
 			tracelog.InfoLogger.Printf("delete the uncompleted file %s\n", latestArch.Filename())
