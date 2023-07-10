@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+
 	"github.com/wal-g/wal-g/internal"
 	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 )
@@ -37,9 +37,10 @@ func SequenceBetweenTS(archives []models.Archive, since, until models.Timestamp)
 		if arch.Type != models.ArchiveTypeOplog {
 			continue
 		}
-		if _, ok := lastTSArch[arch.End]; ok {
+		// TODO: Oplog playback is idempotent, need to check duplicate archives?
+		/*	if _, ok := lastTSArch[arch.End]; ok {
 			return nil, errors.Errorf("duplicate archives with the same end %+v (archives: %+v)", arch.End, archives)
-		}
+		}*/
 		lastTSArch[arch.End] = &arch
 		if seqStart == nil && arch.In(since) {
 			seqStart = &arch
