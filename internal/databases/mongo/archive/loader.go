@@ -177,7 +177,7 @@ func (sd *StorageDownloader) LastKnownArchiveTS() (models.Timestamp, error) {
 				return maxTS, fmt.Errorf("error during read bson in file %s: %w, you can delete this file and retry", latestArch.Filename(), err)
 			}
 			// checks if the latest second file is completed. if true, delete the latest uncompleted file and archive from the new endTS
-			lastTs, lerr := sd.getLatestOpTimeWIthArch(latestSecondArch)
+			lastTs, lerr := sd.getLatestOpTimeWithArch(latestSecondArch)
 			if lerr != nil {
 				return maxTS, fmt.Errorf("error during read bson in file [%s,%s]: %w", latestSecondArch.Filename(), latestArch.Filename(), err)
 			}
