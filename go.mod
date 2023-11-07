@@ -53,6 +53,7 @@ require (
 
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230426101702-58e86b294756
+	github.com/apecloud/datasafed v0.0.1
 	github.com/cactus/go-statsd-client/v5 v5.0.0
 	github.com/google/brotli/go/cbrotli v0.0.0-20220110100810-f4153a09f87c
 	github.com/klauspost/compress v1.17.8

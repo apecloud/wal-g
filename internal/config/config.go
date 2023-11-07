@@ -242,6 +242,8 @@ const (
 	SystemdNotifySocket = "NOTIFY_SOCKET"
 
 	ForceWalDetal = "WALG_FORCE_WAL_DELTA"
+
+	DatasafedConfigFile = "WALG_DATASAFED_CONFIG"
 )
 
 var (
@@ -278,6 +280,7 @@ var (
 		PgpEnvelopeCacheExpiration:   "0",
 		DirectIO:                     "false",
 		LogLevelSetting:              "NORMAL",
+		DatasafedConfigFile: "/etc/datasafed/datasafed.conf",
 	}
 
 	MongoDefaultSettings = map[string]string{

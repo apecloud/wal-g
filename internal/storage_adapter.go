@@ -2,8 +2,10 @@ package internal
 
 import (
 	"github.com/spf13/viper"
+
 	conf "github.com/wal-g/wal-g/internal/config"
 	"github.com/wal-g/wal-g/pkg/storages/azure"
+	"github.com/wal-g/wal-g/pkg/storages/datasafed"
 	"github.com/wal-g/wal-g/pkg/storages/fs"
 	"github.com/wal-g/wal-g/pkg/storages/gcs"
 	"github.com/wal-g/wal-g/pkg/storages/s3"
@@ -57,4 +59,5 @@ var StorageAdapters = []StorageAdapter{
 	{"AZ", azure.SettingList, azure.ConfigureStorage},
 	{"SWIFT", swift.SettingList, swift.ConfigureStorage},
 	{"SSH", sh.SettingList, sh.ConfigureStorage},
+	{"DATASAFED_CONFIG", sh.SettingList, datasafed.ConfigureStorage},
 }
