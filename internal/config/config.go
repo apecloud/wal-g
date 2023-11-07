@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
+
 	"github.com/wal-g/wal-g/internal/webserver"
 )
 
@@ -210,6 +211,8 @@ const (
 	SSHPrivateKeyPath = "SSH_PRIVATE_KEY_PATH"
 
 	SystemdNotifySocket = "NOTIFY_SOCKET"
+
+	DatasafedConfigFile = "WALG_DATASAFED_CONFIG"
 )
 
 var (
@@ -244,6 +247,8 @@ var (
 		PgFailoverStoragesCheckTimeout: "30s",
 		PgFailoverStorageCacheLifetime: "15m",
 		PgpEnvelopeCacheExpiration:     "0",
+
+		DatasafedConfigFile: "/etc/datasafed/datasafed.conf",
 	}
 
 	MongoDefaultSettings = map[string]string{
@@ -411,7 +416,7 @@ var (
 		SSHUsername:       true,
 		SSHPrivateKeyPath: true,
 
-		//File
+		// File
 		"WALG_FILE_PREFIX": true,
 
 		// GOLANG
