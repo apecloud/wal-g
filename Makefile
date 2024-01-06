@@ -25,6 +25,7 @@ IMAGE_TYPE ?= "rdb"
 TOOLS_MOD_DIR := ./internal/tools
 MOCKS_DESTINATION := ./testtools/mocks
 FILE_TO_MOCKS := ./internal/uploader.go # list interface paths here
+GOPRIVATE ?= github.com/apecloud/datasafed
 
 BUILD_TAGS:=
 
@@ -304,7 +305,8 @@ deps: go_deps link_external_deps
 go_deps:
 	git submodule update --init
 	cp CMakeLists-brotli.txt submodules/brotli/CMakeLists.txt
-	go mod vendor
+	GOPRIVATE=$(GOPRIVATE) go mod tidy
+	GOPRIVATE=$(GOPRIVATE) go mod vendor
 ifdef USE_LZO
 	sed -i 's|\(#cgo LDFLAGS:\) .*|\1 -Wl,-Bstatic -llzo2 -Wl,-Bdynamic|' vendor/github.com/cyberdelia/lzo/lzo.go
 endif

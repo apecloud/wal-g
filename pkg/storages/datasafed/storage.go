@@ -20,6 +20,9 @@ type Config struct {
 // TODO: Unit tests
 func NewStorage(config *Config, rootWraps ...storage.WrapRootFolder) (*Storage, error) {
 	var folder storage.Folder = NewFolder(config.ConfigFilePath, "")
+	if folder == nil {
+		return nil, fmt.Errorf("failed to create datasafed folder")
+	}
 
 	for _, wrap := range rootWraps {
 		folder = wrap(folder)
