@@ -310,3 +310,5 @@ unlink_libsodium:
 build_client:
 	cd cmd/daemonclient && \
 	go build -o ../../bin/walg-daemon-client -ldflags "-s -w -X main.buildDate=`date -u +%Y.%m.%d_%H:%M:%S` -X main.gitRevision=`git rev-parse --short HEAD` -X main.version=`git tag -l --points-at HEAD`"
+
+include docker/wal-g/docker.mk
