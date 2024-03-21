@@ -346,3 +346,5 @@ mocks: $(FILE_TO_MOCKS)
 	@echo "Generating mocks..."
 	@rm -rf $(MOCKS_DESTINATION)
 	@for file in $^; do mockgen -source=$$file -destination=$(MOCKS_DESTINATION)/$$(basename $$file); done
+
+include docker/wal-g/docker.mk
