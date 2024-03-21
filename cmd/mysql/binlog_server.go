@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
+
 	"github.com/wal-g/wal-g/internal"
 	conf "github.com/wal-g/wal-g/internal/config"
 	"github.com/wal-g/wal-g/internal/databases/mysql"
@@ -17,6 +18,7 @@ const (
 	untilFlagShortDescr          = "time in RFC3339 for PITR"
 )
 
+var sinceTS string
 var untilTS string
 var BinlogBackupName string
 
@@ -36,12 +38,13 @@ var (
 			tracelog.ErrorLogger.FatalOnError(err)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			mysql.HandleBinlogServer(BinlogBackupName, untilTS)
+			mysql.HandleBinlogServer(BinlogBackupName, untilTS, sinceTS)
 		},
 	}
 )
 
 func init() {
+	binlogServerCmd.Flags().StringVar(&sinceTS, "since-time", "", "binlog since time in RFC3339")
 	binlogServerCmd.Flags().StringVar(&BinlogBackupName, "since", "LATEST", binlogSinceFlagShortDescr)
 	binlogServerCmd.Flags().StringVar(&untilTS,
 		"until",
