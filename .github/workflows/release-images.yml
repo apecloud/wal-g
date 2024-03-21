@@ -1,0 +1,89 @@
+name: Release Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'The tag of image'
+        required: true
+        default: ''
+      image_name:
+        description: 'Release select image or release all'
+        required: true
+        default: ''
+        type: choice
+        options:
+          - all
+          - mongo
+          - mysql
+          - mysql-ubuntu
+          - pg
+
+run-name: release image:${{ inputs.image_name }}:${{ inputs.image_tag }} ${{ github.ref_name }}
+
+jobs:
+  get-images-info:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.get_images_info.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: get images info
+        id: get_images_info
+        run: |
+          IMAGES_INFO=""
+          image_name="wal-g-${{ inputs.image_name }}"
+          image_tag="${{ inputs.image_tag }}"
+          docker_file="Dockerfile-${{ inputs.image_name }}"
+          case ${{ inputs.image_name }} in
+              *-ubuntu)
+                  if [[ "${image_tag}" != *"ubuntu"* ]]; then
+                      image_tag=${image_tag}-ubuntu
+                  fi
+                  if [[ "${{ inputs.image_name }}" == "mysql-ubuntu" ]]; then
+                      image_name="wal-g-mysql"
+                  fi
+              ;;
+              all)
+                  for docker_file in $( ls docker/wal-g | (grep "Dockerfile" || true )); do
+                      image_name_tmp="wal-g-${docker_file/Dockerfile-/}"
+                      image_tag_tmp="test"
+                      case ${docker_file} in
+                          Dockerfile-*-ubuntu)
+                              if [[ "${image_tag_tmp}" != *"ubuntu"* ]]; then
+                                  image_tag_tmp=${image_tag_tmp}-ubuntu
+                              fi
+                              if [[ "${image_name_tmp}" == "wal-g-mysql-ubuntu" ]]; then 
+                                  image_name_tmp="wal-g-mysql"
+                              fi
+                          ;;
+                      esac
+                      if [[ -z "$IMAGES_INFO" ]]; then
+                          IMAGES_INFO="{\"image-name\":\"$image_name_tmp\",\"image-tag\":\"$image_tag_tmp\",\"docker-file\":\"$docker_file\"}"
+                      else
+                          IMAGES_INFO="$IMAGES_INFO,{\"image-name\":\"$image_name_tmp\",\"image-tag\":\"$image_tag_tmp\",\"docker-file\":\"$docker_file\"}"
+                      fi
+                  done
+              ;;
+          esac
+          if [[ -z "${IMAGES_INFO}" ]]; then
+              IMAGES_INFO="{\"image-name\":\"$image_name\",\"image-tag\":\"$image_tag\",\"docker-file\":\"$docker_file\"}"
+          fi
+          echo "$IMAGES_INFO"
+          echo "matrix={\"include\":[$IMAGES_INFO]}" >> $GITHUB_OUTPUT
+
+  release-images:
+    name: release image ${{ matrix.image-name }}
+    needs: [ get-images-info ]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.get-images-info.outputs.matrix) }}
+    uses: apecloud/apecloud-cd/.github/workflows/release-image-cache.yml@v0.1.58
+    with:
+      IMG: "apecloud/${{ matrix.image-name }}"
+      VERSION: "${{ matrix.image-tag }}"
+      DOCKERFILE_PATH: "./docker/wal-g/${{ matrix.docker-file }}"
+      REMOVE_PREFIX: false
+      APECD_REF: "v0.1.58"
+    secrets: inherit
+
