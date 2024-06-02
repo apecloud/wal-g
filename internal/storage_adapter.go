@@ -16,6 +16,7 @@ import (
 
 type StorageAdapter struct {
 	storageType  string
+	noPrefix     bool
 	settingNames []string
 	configure    ConfigureStorageFunc
 }
@@ -27,6 +28,9 @@ type ConfigureStorageFunc func(
 ) (storage.HashableStorage, error)
 
 func (adapter *StorageAdapter) PrefixSettingKey() string {
+	if adapter.noPrefix {
+		return adapter.storageType
+	}
 	return adapter.storageType + "_PREFIX"
 }
 
@@ -53,11 +57,11 @@ func (adapter *StorageAdapter) loadSettings(config *viper.Viper) map[string]stri
 }
 
 var StorageAdapters = []StorageAdapter{
-	{"S3", s3.SettingList, s3.ConfigureStorage},
-	{"FILE", nil, fs.ConfigureStorage},
-	{"GS", gcs.SettingList, gcs.ConfigureStorage},
-	{"AZ", azure.SettingList, azure.ConfigureStorage},
-	{"SWIFT", swift.SettingList, swift.ConfigureStorage},
-	{"SSH", sh.SettingList, sh.ConfigureStorage},
-	{"DATASAFED_CONFIG", sh.SettingList, datasafed.ConfigureStorage},
+	{"S3", false, s3.SettingList, s3.ConfigureStorage},
+	{"FILE", false, nil, fs.ConfigureStorage},
+	{"GS", false, gcs.SettingList, gcs.ConfigureStorage},
+	{"AZ", false, azure.SettingList, azure.ConfigureStorage},
+	{"SWIFT", false, swift.SettingList, swift.ConfigureStorage},
+	{"SSH", false, sh.SettingList, sh.ConfigureStorage},
+	{"DATASAFED_CONFIG", true, sh.SettingList, datasafed.ConfigureStorage},
 }
