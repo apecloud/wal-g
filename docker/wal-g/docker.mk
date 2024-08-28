@@ -72,6 +72,18 @@ else
 endif
 endif
 
+# Note: not used
+build_mysql_5.7_ubuntu_image: $(CMD_FILES) $(PKG_FILES)
+ifneq ($(BUILDX_ENABLED), true)
+	$(DOCKER) build . $(DOCKER_BUILD_ARGS) --platform linux/amd64 --build-arg UBUNTU_VERSION=18.04 --file $(DOCKERFILE_DIR)/Dockerfile-mysql-57-ubuntu --tag $(MYSQL_IMG):$(VERSION)-ubuntu
+else
+ifeq ($(TAG_LATEST), true)
+	$(DOCKER) buildx build . $(DOCKER_BUILD_ARGS) --platform $(BUILDX_PLATFORMS) --file $(DOCKERFILE_DIR)/Dockerfile-mysql-57-ubuntu --tag $(MYSQL_IMG):latest-ubuntu
+else
+	$(DOCKER) buildx build . $(DOCKER_BUILD_ARGS) --platform $(BUILDX_PLATFORMS) --file $(DOCKERFILE_DIR)/Dockerfile-mysql-57-ubuntu --tag $(MYSQL_IMG):$(VERSION)-ubuntu
+endif
+endif
+
 build_pg_image: $(CMD_FILES) $(PKG_FILES)
 ifneq ($(BUILDX_ENABLED), true)
 	$(DOCKER) build . $(DOCKER_BUILD_ARGS) --file $(DOCKERFILE_DIR)/Dockerfile-pg --tag $(PG_IMG):$(VERSION) --tag $(PG_IMG):latest
