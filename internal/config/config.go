@@ -220,33 +220,30 @@ var (
 	DefaultConfigValues map[string]string
 
 	CommonDefaultConfigValues = map[string]string{
-		DownloadConcurrencySetting:     "10",
-		UploadConcurrencySetting:       "16",
-		UploadDiskConcurrencySetting:   "1",
-		UploadQueueSetting:             "2",
-		DownloadFileRetriesSetting:     "15",
-		PreventWalOverwriteSetting:     "false",
-		UploadWalMetadata:              "NOMETADATA",
-		DeltaMaxStepsSetting:           "0",
-		CompressionMethodSetting:       "lz4",
-		UseWalDeltaSetting:             "false",
-		TarSizeThresholdSetting:        "1073741823", // (1 << 30) - 1
-		TarDisableFsyncSetting:         "false",
-		TotalBgUploadedLimit:           "32",
-		UseReverseUnpackSetting:        "false",
-		SkipRedundantTarsSetting:       "false",
-		VerifyPageChecksumsSetting:     "false",
-		StoreAllCorruptBlocksSetting:   "false",
-		UseRatingComposerSetting:       "false",
-		UseCopyComposerSetting:         "false",
-		UseDatabaseComposerSetting:     "false",
-		WithoutFilesMetadataSetting:    "false",
-		MaxDelayedSegmentsCount:        "0",
-		SerializerTypeSetting:          "json_default",
-		LibsodiumKeyTransform:          "none",
-		PgFailoverStoragesCheckTimeout: "30s",
-		PgFailoverStorageCacheLifetime: "15m",
-		PgpEnvelopeCacheExpiration:     "0",
+		DownloadConcurrencySetting:   "10",
+		UploadConcurrencySetting:     "16",
+		UploadDiskConcurrencySetting: "1",
+		UploadQueueSetting:           "2",
+		DownloadFileRetriesSetting:   "15",
+		PreventWalOverwriteSetting:   "false",
+		UploadWalMetadata:            "NOMETADATA",
+		DeltaMaxStepsSetting:         "0",
+		CompressionMethodSetting:     "lz4",
+		UseWalDeltaSetting:           "false",
+		TarSizeThresholdSetting:      "1073741823", // (1 << 30) - 1
+		TarDisableFsyncSetting:       "false",
+		TotalBgUploadedLimit:         "32",
+		UseReverseUnpackSetting:      "false",
+		SkipRedundantTarsSetting:     "false",
+		VerifyPageChecksumsSetting:   "false",
+		StoreAllCorruptBlocksSetting: "false",
+		UseRatingComposerSetting:     "false",
+		UseCopyComposerSetting:       "false",
+		UseDatabaseComposerSetting:   "false",
+		WithoutFilesMetadataSetting:  "false",
+		MaxDelayedSegmentsCount:      "0",
+		SerializerTypeSetting:        "json_default",
+		LibsodiumKeyTransform:        "none",
 
 		DatasafedConfigFile: "/etc/datasafed/datasafed.conf",
 	}
@@ -273,11 +270,14 @@ var (
 	}
 
 	PGDefaultSettings = map[string]string{
-		PgWalSize:                   "16",
-		PgBackRestStanza:            "main",
-		PgAliveCheckInterval:        "1m",
-		PgFailoverStoragesCheckSize: "1mb",
-		PgDaemonWALUploadTimeout:    "60s",
+		PgWalSize:                      "16",
+		PgBackRestStanza:               "main",
+		PgAliveCheckInterval:           "1m",
+		PgFailoverStoragesCheckSize:    "1mb",
+		PgDaemonWALUploadTimeout:       "60s",
+		PgFailoverStoragesCheckTimeout: "30s",
+		PgFailoverStorageCacheLifetime: "15m",
+		PgpEnvelopeCacheExpiration:     "0",
 	}
 
 	GPDefaultSettings = map[string]string{
