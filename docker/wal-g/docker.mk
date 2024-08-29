@@ -12,7 +12,8 @@ TAG_LATEST ?= false
 # Image URL to use all building/pushing image targets
 MYSQL_IMG ?= docker.io/apecloud/wal-g-mysql
 PG_IMG ?= docker.io/apecloud/wal-g-pg
-MONGO_IMG ?= docker.io/apecloud/wal-g-mongo
+# MONGO_IMG ?= docker.io/apecloud/wal-g-mongo
+MONGO_IMG ?= apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com/apecloud/wal-g
 
 DOCKERFILE_DIR = ./docker/wal-g
 DOCKER_BUILD_ARGS := --build-arg BUILD_DATE=$(shell date -u +%Y.%m.%d_%H:%M:%S) \

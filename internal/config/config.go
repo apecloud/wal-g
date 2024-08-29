@@ -692,9 +692,7 @@ func isAllowedSetting(setting string, AllowedSettings map[string]bool) (exists b
 // GetSetting extract setting by key if key is set, return empty string otherwise
 func GetSetting(key string) (value string, ok bool) {
 	if viper.IsSet(key) {
-		value := viper.GetString(key)
-		value = strings.TrimRight(value, "\r\n")
-		return value, true
+		return viper.GetString(key), true
 	}
 	return "", false
 }
