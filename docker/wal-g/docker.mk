@@ -11,7 +11,7 @@ TAG_LATEST ?= false
 
 # Image URL to use all building/pushing image targets
 MYSQL_IMG ?= docker.io/apecloud/wal-g-mysql
-PG_IMG ?= docker.io/apecloud/wal-g-pg
+PG_IMG ?= apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com/apecloud/wal-g
 # MONGO_IMG ?= docker.io/apecloud/wal-g-mongo
 MONGO_IMG ?= apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com/apecloud/wal-g
 
