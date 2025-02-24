@@ -114,11 +114,6 @@ func (folder *Folder) GetSubFolder(subFolderRelativePath string) storage.Folder 
 	// But we do not have to guarantee folder persistence, but any subsequent calls will fail
 	// Just like in all other Storage Folders
 	subFolderPath := path.Join(folder.subPath, subFolderRelativePath)
-	_, err := folder.storage.Stat(folder.ctx, subFolderPath)
-	if err != nil {
-		// make sure the dir exists
-		_ = folder.storage.Mkdir(folder.ctx, subFolderPath)
-	}
 	return &Folder{
 		ctx:     folder.ctx,
 		subPath: subFolderPath,
