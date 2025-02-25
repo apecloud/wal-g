@@ -9,9 +9,12 @@ import (
 var defaultConfigFilePath = "/etc/datasafed/datasafed.conf"
 
 // TODO: Unit tests
-func ConfigureStorage(_ string, _ map[string]string, rootWraps ...storage.WrapRootFolder) (storage.HashableStorage, error) {
+func ConfigureStorage(configFilePath string, _ map[string]string, rootWraps ...storage.WrapRootFolder) (storage.HashableStorage, error) {
+	if configFilePath == "" {
+		configFilePath = defaultConfigFilePath
+	}
 	config := &Config{
-		ConfigFilePath: defaultConfigFilePath,
+		ConfigFilePath: configFilePath,
 	}
 
 	st, err := NewStorage(config, rootWraps...)
