@@ -74,4 +74,4 @@ COPY --from=bin-downloader /usr/bin/mysqlbinlog /usr/bin/mysqlbinlog
 
 USER 1000:1000
 
-ENTRYPOINT ["/user/bin/wal-g"]
+ENTRYPOINT ["/usr/bin/wal-g"]
