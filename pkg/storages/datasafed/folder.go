@@ -163,3 +163,9 @@ func (folder *Folder) isNotFoundError(err error) bool {
 func (folder *Folder) GetFilePath(objectRelativePath string) string {
 	return path.Join(folder.subPath, objectRelativePath)
 }
+
+func (folder *Folder) SetVersioningEnabled(enable bool) {}
+
+func (folder *Folder) Validate() error {
+	return nil
+}

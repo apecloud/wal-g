@@ -11,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
+
 	"github.com/wal-g/wal-g/internal"
 	conf "github.com/wal-g/wal-g/internal/config"
 	"github.com/wal-g/wal-g/utility"
@@ -60,8 +61,8 @@ func (tarInterpreter *FileTarInterpreter) unwrapRegularFileOld(fileReader io.Rea
 
 	// If this file is incremental we use it's base version from incremental path
 	if haveFileDescription && tarInterpreter.Sentinel.IsIncremental() && fileDescription.IsIncremented {
-		err := ApplyFileIncrement(targetPath, fileReader, tarInterpreter.createNewIncrementalFiles, fsync)
-		return errors.Wrapf(err, "Interpret: failed to apply increment for '%s'", targetPath)
+		err := ApplyFileIncrement(targetPath, fileReader, fileDescription.IsIncremented, fsync)
+		return errors.Wrapf(err, "Interpret: failed to apply increment for '%s', create new incremental file: %t", targetPath, fileDescription.IsIncremented)
 	}
 	err := PrepareDirs(fileInfo.Name, targetPath)
 	if err != nil {
