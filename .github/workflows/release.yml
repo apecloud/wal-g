@@ -6,7 +6,7 @@ on:
       - 'v*' # Push events to matching v*, i.e. v0.2.19, v0.2.14a
 
 env:
-  GO_VERSION: "1.20"
+  GO_VERSION: "1.23"
   USE_BROTLI: 1
   USE_LIBSODIUM: 1
   USE_LZO: 1
@@ -96,28 +96,28 @@ jobs:
             USE_LIBSODIUM: ${{ env.USE_LIBSODIUM }}
             USE_LZO: ${{ env.USE_LZO }}
           shell: /bin/bash
-          run: |            
+          run: |
             apt-get update
             apt-get install -y build-essential curl git cmake liblzo2-dev brotli libsodium-dev
-            
+
             curl -LO https://go.dev/dl/go1.20.5.linux-arm64.tar.gz
             tar -C /usr/local -xzf go1.20.5.linux-arm64.tar.gz
             export GOROOT=/usr/local/go
-            export GOPATH=$HOME/go          
+            export GOPATH=$HOME/go
             export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-            
-            
+
+
             go get -v -t -d ./...
             if [ -f Gopkg.toml ]; then
               curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
               dep ensure
             fi
-            
+
             git config --global --add safe.directory /home/runner/work/wal-g/wal-g
             git config --global --add safe.directory /home/runner/work/wal-g/wal-g/submodules/brotli
-            
+
             make deps
-            
+
             make ${{ matrix.db }}_build
       - name: Rename WAL-G binary
         run: mv main/${{ matrix.db }}/wal-g wal-g-${{ matrix.db }}-${{ matrix.distro }}-${{ matrix.arch }}

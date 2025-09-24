@@ -97,7 +97,7 @@ func containerClientWithSASToken(config *Config) (*container.Client, error) {
 	}
 
 	containerClient, err := container.NewClientWithNoCredential(containerURLString, &container.ClientOptions{
-		azcore.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
 			Retry: policy.RetryOptions{TryTimeout: config.TryTimeout},
 		},
 	})
@@ -121,7 +121,7 @@ func containerClientWithAccessKey(config *Config) (*container.Client, error) {
 	}
 
 	containerClient, err := container.NewClientWithSharedKeyCredential(containerURLString, credential, &container.ClientOptions{
-		azcore.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
 			Retry: policy.RetryOptions{TryTimeout: config.TryTimeout},
 		},
 	})
@@ -146,7 +146,7 @@ func containerClientWithDefaultAuth(config *Config) (*container.Client, error) {
 	}
 
 	containerClient, err := container.NewClient(containerURLString, defaultCredential, &container.ClientOptions{
-		azcore.ClientOptions{
+		ClientOptions: azcore.ClientOptions{
 			Retry: policy.RetryOptions{TryTimeout: config.TryTimeout},
 		},
 	})

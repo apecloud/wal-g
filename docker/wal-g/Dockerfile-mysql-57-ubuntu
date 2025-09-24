@@ -1,6 +1,6 @@
 # mysql-5.7 not supported when version >= 20.04
 ARG DIST_IMG=ubuntu:18.04
-ARG GO_VERSION=1.21-alpine
+ARG GO_VERSION=1.23-alpine
 
 FROM --platform=${BUILDPLATFORM} golang:${GO_VERSION} as builder
 
