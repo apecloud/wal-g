@@ -57,7 +57,7 @@ FROM ${DIST_IMG} as dist
 WORKDIR /
 RUN apk update && \
     apk add --update --no-cache \
-    bash coreutils jq postgresql15-client=15.13-r0
+    bash coreutils jq postgresql15-client=15.14-r0
 
 COPY --from=builder /wal-g /usr/bin/wal-g
 

@@ -53,12 +53,11 @@ require (
 
 require (
 	github.com/ProtonMail/go-crypto v1.0.0
-	github.com/apecloud/datasafed v0.2.1
+	github.com/apecloud/datasafed v0.2.2
 	github.com/cactus/go-statsd-client/v5 v5.0.0
 	github.com/google/brotli/go/cbrotli v0.0.0-20220110100810-f4153a09f87c
 	github.com/klauspost/compress v1.17.8
 	github.com/mongodb/mongo-tools v0.0.0-20240724183527-6d4f001be3fc
-	github.com/mongodb/mongo-tools-common v4.0.18+incompatible
 	github.com/ncw/directio v1.0.5
 	github.com/ncw/swift/v2 v2.0.2
 	github.com/pkg/profile v1.7.0

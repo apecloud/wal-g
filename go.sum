@@ -107,8 +107,8 @@ github.com/alessio/shellescape v1.4.1/go.mod h1:PZAiSCk0LJaZkiCSkPv8qIobYglO3FPp
 github.com/andybalholm/cascadia v1.3.2 h1:3Xi6Dw5lHF15JtdcmAHD3i1+T8plmv7BQ/nsViSLyss=
 github.com/andybalholm/cascadia v1.3.2/go.mod h1:7gtRlve5FxPPgIgX36uWBX58OdBsSS6lUvCFb+h7KvU=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
-github.com/apecloud/datasafed v0.2.1 h1:ij3/yKRNmGw8gPRa5dP06S474/YdziGKXl/jTHmmcxo=
-github.com/apecloud/datasafed v0.2.1/go.mod h1:45bdIpyT2I+IR8+tu6EJI6VWcKPmJb9Tar72/wV2L3w=
+github.com/apecloud/datasafed v0.2.2 h1:upGpG4zrYPqqa6AtdDvXELp9wYVFpZIy0iCS99BkNGE=
+github.com/apecloud/datasafed v0.2.2/go.mod h1:45bdIpyT2I+IR8+tu6EJI6VWcKPmJb9Tar72/wV2L3w=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmVTwzkszR9V5SSuryQ31EELlFMUz1kKyl939pY=
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
@@ -609,8 +609,6 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/mongodb/mongo-tools v0.0.0-20240724183527-6d4f001be3fc h1:BOTtfrCNuPnXgnEDvmXYiP0K8WF5JzDh3dQwZ9QThF0=
 github.com/mongodb/mongo-tools v0.0.0-20240724183527-6d4f001be3fc/go.mod h1:mq5q2Rrbw6+VEtDc+p5haujgWoQv3foL2YS5YISr2UA=
-github.com/mongodb/mongo-tools-common v4.0.18+incompatible h1:vujUm85X8TipdX6v2Sr35DiDwHYn7BxBaz0gCs4U3xM=
-github.com/mongodb/mongo-tools-common v4.0.18+incompatible/go.mod h1:T0AGIWI5PvxSzqt5zsR5zlcHl52KGeAzhoAnSvvpEtU=
 github.com/montanaflynn/stats v0.7.1 h1:etflOAAHORrCC44V+aR6Ftzort912ZU+YLiSTuV8eaE=
 github.com/montanaflynn/stats v0.7.1/go.mod h1:etXPPgVO6n31NxCd9KQUMvCM+ve0ruNzt6R8Bnaayow=
 github.com/mschoch/smat v0.0.0-20160514031455-90eadee771ae h1:VeRdUYdCw49yizlSbMEn2SZ+gT+3IUKx8BqxyQdz+BY=
