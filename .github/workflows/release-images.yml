@@ -47,13 +47,13 @@ jobs:
               all)
                   for docker_file in $( ls docker/wal-g | (grep "Dockerfile" || true )); do
                       image_name_tmp="wal-g-${docker_file/Dockerfile-/}"
-                      image_tag_tmp="test"
+                      image_tag_tmp=${image_tag}
                       case ${docker_file} in
                           Dockerfile-*-ubuntu)
                               if [[ "${image_tag_tmp}" != *"ubuntu"* ]]; then
                                   image_tag_tmp=${image_tag_tmp}-ubuntu
                               fi
-                              if [[ "${image_name_tmp}" == "wal-g-mysql-ubuntu" ]]; then 
+                              if [[ "${image_name_tmp}" == "wal-g-mysql-ubuntu" ]]; then
                                   image_name_tmp="wal-g-mysql"
                               fi
                           ;;
