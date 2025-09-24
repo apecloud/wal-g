@@ -58,7 +58,7 @@ WORKDIR /
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apk update && \
     apk add --update --no-cache \
-    mysql=10.11.6-r0
+    mysql=11.4.8-r1
 
 FROM ${DIST_IMG} as dist
 
@@ -67,7 +67,7 @@ ENV MYSQLDATA /var/lib/mysql
 WORKDIR /
 RUN apk update && \
     apk add --update --no-cache \
-    mysql-client=10.11.6-r0 zstd bash coreutils jq
+    mysql-client=11.4.8-r1 zstd bash coreutils jq
 
 COPY --from=builder /wal-g /usr/bin/wal-g
 COPY --from=bin-downloader /usr/bin/mysqlbinlog /usr/bin/mysqlbinlog
