@@ -56,6 +56,9 @@ jobs:
                               if [[ "${image_name_tmp}" == "wal-g-mysql-ubuntu" ]]; then
                                   image_name_tmp="wal-g-mysql"
                               fi
+                              if [[ "${image_name_tmp}" == "wal-g-mysql-57-ubuntu" ]]; then
+                                  image_name_tmp="wal-g-mysql-57"
+                              fi
                           ;;
                       esac
                       if [[ -z "$IMAGES_INFO" ]]; then
